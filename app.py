@@ -1,5 +1,7 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, render_template, request, redirect, session
+from dotenv import load_dotenv
+load_dotenv()
 import whisper
 from transformers import pipeline
 import os
@@ -38,10 +40,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 # Use env variable for MongoDB URI 
 MONGO_URI = os.environ.get("MONGO_URI")
 if not MONGO_URI:
-    raise RuntimeError(
-        "MONGO_URI environment variable is not set. "
-        "Add it as a HuggingFace Space secret."
-    )
+    raise RuntimeError("MONGO_URI environment variable is not set.")
 client = MongoClient(MONGO_URI)
 db = client["speech_app"]
 users_collection = db["users"]
@@ -367,4 +366,4 @@ def allowed_mime(file):
 
 # HF Spaces requires port 7860 and host 0.0.0.0
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7860)
+    app.run(host="0.0.0.0", port=7860, debug=True)
